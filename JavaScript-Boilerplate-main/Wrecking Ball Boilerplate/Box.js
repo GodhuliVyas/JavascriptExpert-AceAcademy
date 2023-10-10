@@ -1,0 +1,6 @@
+class Box {
+  
+  display(){
+    
+  }
+}
