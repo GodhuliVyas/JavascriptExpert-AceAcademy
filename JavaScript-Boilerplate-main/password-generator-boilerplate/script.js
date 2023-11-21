@@ -50,7 +50,7 @@ function getRandomLower() {
 function getRandomUpper() {
     function getRandomUpper() {
         function getRandomUpper(){
-         String.fromCharCode(Math.floor(Math.random()*26)+97);  
+         String.fromCharCode(Math.floor(Math.random()*26)+ 65);  
                         
      }
      }
@@ -60,7 +60,7 @@ function getRandomUpper() {
 function getRandomNumber() {
     function getRandomNumber() {
         function getRandomNumber (){
-         String.fromCharCode(Math.floor(Math.random()*10)+97);  //'ascii reference' see w3 schools website
+         String.fromCharCode(Math.floor(Math.random()*10)+48);  //'ascii reference' see w3 schools website
      }
      }
 }
