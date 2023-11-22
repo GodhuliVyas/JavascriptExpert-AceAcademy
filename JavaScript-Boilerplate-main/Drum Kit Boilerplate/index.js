@@ -6,11 +6,17 @@ for (var i = 0; i < numberOfDrumButtons; i++) {
         var buttonText = this.innerHTML;
         console.log("buttonText",buttonText);
         makeSound(buttonText);
+        buttonAnimation(buttonText);
     })
-  
 }
 
 //Add event listener on keypress
+document.addEventListener("keypress", function(event){
+    console.log("event", event);
+
+    //makeSound(event.key);
+    //buttonAnimation(event.key);
+})
 
 
 function makeSound(key) {
@@ -46,13 +52,14 @@ function makeSound(key) {
             
             default: "Invalid Input";
     }
-  
-  
 }
 
 
 function buttonAnimation(currentKey) {
-    
-
-
+    var activeButton = document.querySelector("." + currentKey);
+    activeButton.classList.add("pressed");      //the button pressed will have the classname 'pressed', adding classname dynamically
+                                                
+    setTimeout(function(){
+        activeButton.classList.remove("pressed");
+    }, 100);            //classname will remove after 100ms
 }
