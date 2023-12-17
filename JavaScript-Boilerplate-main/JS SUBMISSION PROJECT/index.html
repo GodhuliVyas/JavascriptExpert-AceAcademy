@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="card">
+        <div class="search">
+            <input type="text" placeholder="enter city name" spellcheck="false">
+            <button><img src="image/images/search.png"></button>
+        </div>
+        <div class="weather">
+            <img src="image/images/rain.png" class="weather-icon">
+            <h1 class="temp">22°C</h1>
+            <h2 class="city">Delhi</h2>
+            <div class="details">
+                <div class="col">
+                    <img src="image/images/humidity.png">
+                    <div>
+                        <p class="humidity">50%</p>
+                        <p>Humidity</p>
+                    </div>
+                    <div class="col">
+                        <img src="image/images/wind.png">
+                        <div>
+                            <p class="wind">15 km/h</p>
+                            <p>Wind Speed</p>
+                        </div>
+                </div>
+            </div>
+        </div>
+        <div class="toggle" id="toggleButton">Dark Mode</div>
+        <div class="clock" id="clock"></div>
+
+    </div>
+    
+    <script>
+        const apiKey = "15512b98e0603a6d4feff0441e6ff879";
+        const apiUrl = "https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+
+        const searchBox = document.querySelector(".search input");
+        const searchBtn = document.querySelector(".search button");
+        const weatherIcon = document.querySelector(".weather-icon");
+        const toggle = document.querySelector('.toggle');
+        const clockElement = document.querySelector(".clock");
+
+//adding toggle function
+if (toggle) {
+        toggle.addEventListener('click', (e)=>{
+            console.log("e", e);
+            const html = document.querySelector('html')
+            if(html.classList.contains('dark')){
+                html.classList.remove('dark')
+                e.target.innerHTML = "Dark Mode"
+            }
+            else{
+                html.classList.add('dark')
+                e.target.innerHTML = "Light Mode"
+            }
+        })
+
+    }//------------------------------
+
+
+    const clockElement1 = document.getElementById("clock");
+    function updateClock(cityTimeZone) {
+        const now = new Date();
+    const options = { timeZone: cityTimeZone, hour12: false };
+    const cityTime = now.toLocaleString('en-US', options);
+    
+        // Display the local time for the provided city
+        if (clockElement) {
+            clockElement.textContent = `Local Time: ${cityTime}`;
+        }
+    }
+        async function checkWeather(city){
+            try{
+            const response = await fetch(apiUrl + city + `&appid=${apiKey}`);
+            var data = await response.json();
+
+            console.log(data);  //display the data on console for city bangalore
+
+            document.querySelector(".city").innerHTML = data.name;//to update the city name
+            document.querySelector(".temp").innerHTML = Math.round(data.main.temp) + "°C";//to update the temperature
+            //round function is used to round off the temperature
+            document.querySelector(".humidity").innerHTML = data.main.humidity + "%";
+            document.querySelector(".wind").innerHTML = data.wind.speed + " km/h";
+
+            const cityTimeZone1 = data.timezone ? `Etc/GMT${data.timezone / 3600}` : "GMT";
+
+            if(data.weather[0].main == "Clouds"){
+                weatherIcon.src = "image/images/clouds.png"
+            }
+            else if(data.weather[0].main == "Clear"){
+                weatherIcon.src = "image/images/clear.png"
+            }
+            else if(data.weather[0].main == "Rain"){
+                weatherIcon.src = "image/images/rain.png"
+            }
+            else if(data.weather[0].main == "Drizzle"){
+                weatherIcon.src = "image/images/drizzle.png"
+            }
+            else if(data.weather[0].main == "Mist"){
+                weatherIcon.src = "image/images/mist.png"
+            }
+            else if(data.weather[0].main == "Snow"){
+                weatherIcon.src = "image/images/snow.png"
+            }
+
+            const cityTimeZone = data.timezone ? `GMT${data.timezone / 3600}` : "GMT"; 
+
+            updateClock(cityTimeZone);
+        }catch (error) {
+            console.error('Error fetching weather data:', error.message);
+            // Handle the error, e.g., display an error message to t
+        }
+    }
+        function updateClock() {
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+
+            const formattedTime = `${hours}:${minutes}:${seconds}`;
+            if (clockElement) {
+                clockElement.textContent = formattedTime;
+            }
+        }
+
+
+        searchBtn.addEventListener("click", (event)=>{
+            event.preventDefault();
+            checkWeather(searchBox.value);      //gives the city name written in the input field , user defined
+        })
+
+        
+        setInterval(updateClock, 1000);
+    </script>
+</body>
+</html>
